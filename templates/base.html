@@ -22,14 +22,28 @@
                 <!-- Add more links here -->
             </ul>
             <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <!-- Display user's profile picture and name -->
+                            <img src="{{ user.profile.picture.url }}" alt="Profile" class="rounded-circle" style="width: 30px; height: 30px;">
+                            {{ user.username }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                   
+                {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Cart</a>
+                    <a class="nav-link" href="#">Cart</a>
                 </li>
             </ul>
         </div>
