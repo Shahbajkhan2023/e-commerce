@@ -1,24 +1,87 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="container">
-    <h1 class="my-4">Welcome to Our E-Commerce Site</h1>
-    <h2 class="my-4">Categories</h2>
-    <div class="row">
+    <h1 class="my-4 text-center">Welcome to Our E-Commerce Site</h1>
+    <h2 class="my-4 text-center">Explore Our Categories</h2>
+    <div id="categories-container" class="row">
         {% for category in categories %}
-        <div class="col-md-4 mb-4">
-            <div class="card">
+        <div class="col-md-4 mb-4 category-item">
+            <div class="card border-0 shadow-sm rounded">
                 {% if category.image %}
-                <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+                <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <img src="{% static 'img/default-category.jpg' %}" class="card-img-top" alt="Default Image" style="height: 200px; object-fit: cover;">
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ category.name }}</h5>
-                    <p class="card-text">{{ category.description }}</p>
-                   
+                    <h5 class="card-title text-primary">{{ category.name }}</h5>
+                    <p class="card-text">{{ category.description|slice:":100" }}{% if category.description|length > 100 %}...{% endif %}</p>
+                    <a href="{% url 'brand_list' category_slug=category.slug %}" class="btn btn-primary">View More</a>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+    <div id="loading" class="text-center my-4" style="display: none;">
+        <p>Loading more categories...</p>
+    </div>
 </div>
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    let page = 1;
+    let hasNext = true;
+
+    function loadMoreCategories() {
+        if (!hasNext) return;
+
+        $('#loading').show();
+
+        $.ajax({
+            url: '?page=' + (page + 1),
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                const categories = response.categories;
+                hasNext = response.has_next;
+
+                if (categories.length > 0) {
+                    categories.forEach(function(category) {
+                        $('#categories-container').append(
+                            `<div class="col-md-4 mb-4 category-item">
+                                <div class="card border-0 shadow-sm rounded">
+                                    ${category.image ? `<img src="${category.image}" class="card-img-top" alt="${category.name}" style="height: 200px; object-fit: cover;">` : `<img src="{% static 'img/default-category.jpg' %}" class="card-img-top" alt="Default Image" style="height: 200px; object-fit: cover;">`}
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">${category.name}</h5>
+                                        <p class="card-text">${category.description.slice(0, 100)}${category.description.length > 100 ? '...' : ''}</p>
+                                        <a href="#" class="btn btn-primary">View More</a>
+                                    </div>
+                                </div>
+                            </div>`
+                        );
+                    });
+                }
+
+                $('#loading').hide();
+                page++;
+            },
+            error: function() {
+                $('#loading').hide();
+            }
+        });
+    }
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+            loadMoreCategories();
+        }
+    });
+});
+</script>
 {% endblock %}

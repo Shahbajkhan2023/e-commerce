@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4">{{ category.name }} Brands</h2>
+    <div class="row">
+        {% for brand in brands %}
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm rounded">
+                {% if brand.image %}
+                <img src="{{ brand.image.url }}" alt="{{ brand.name }}" class="card-img-top rounded-circle" style="height: 150px; width: 150px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top rounded-circle" style="height: 150px; width: 150px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                    <span class="text-muted">{{ brand.name|slice:":1" }}</span>
+                </div>
+                {% endif %}
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ brand.name }}</h5>
+                    <a href="{% url 'subcategory_list' category_slug=category.slug brand_slug=brand.slug %}" class="btn btn-primary">View Subcategories</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

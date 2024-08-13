@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4 text-center">{{ brand.name }} Subcategories</h2>
+    <div class="row">
+        {% for subcategory in subcategories %}
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-lg rounded">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="card-title mb-0">{{ subcategory.name }}</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="card-text mb-4">Discover all products under this subcategory and explore the best offers we have.</p>
+                    <a href="#" class="btn btn-primary btn-lg">View Products</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
