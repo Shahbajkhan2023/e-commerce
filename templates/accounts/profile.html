@@ -1,0 +1,20 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+{% if profile.profile_image %}
+    <img src="{{ profile.profile_image.url }}" alt="Profile Picture" class="profile-img">
+{% else %}
+    <img src="{% static 'img/download.jpg' %}" alt="Default Profile Image" class="profile-img">
+{% endif %}
+<h1>Profile</h1>
+<p>Email: {{ profile.user.email }}</p>
+<p>First Name: {{ profile.first_name }}</p>
+<p>Last Name: {{ profile.last_name }}</p>
+<p>Address: {{ profile.address }}</p>
+<p>Phone Number: {{ profile.phone_number }}</p>
+
+<a href="{% url 'update_profile' %}">Edit Profile</a>
+{% endblock %}

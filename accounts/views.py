@@ -5,7 +5,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
-
+from django.shortcuts import render, get_object_or_404
+from .models import Profile
+from .forms import ProfileUpdateForm
 
 def signup(request):
     if request.method == 'POST':
@@ -49,3 +51,24 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+
+@login_required
+def user_profile_view(request):
+    profile = get_object_or_404(Profile, user=request.user)
+    return render(request, 'accounts/profile.html', {'profile': profile})
+
+
+@login_required
+def update_profile(request):
+    profile = get_object_or_404(Profile, user=request.user)
+    
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Redirect to the profile page or another page
+    else:
+        form = ProfileUpdateForm(instance=profile)
+    
+    return render(request, 'accounts/update_profile.html', {'form': form})

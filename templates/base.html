@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,9 +28,13 @@
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'profile' %}">
                             <!-- Display user's profile picture and name -->
-                            <img src="{{ user.profile.picture.url }}" alt="Profile" class="rounded-circle" style="width: 30px; height: 30px;">
+                            {% if profile.profile_image %}
+                                <img src="{{ profile.profile_image.url }}" alt="Profile Image" style="width: 30px; height: 30px; border-radius: 50%; float: right; margin-left: 10px;">
+                            {% else %}
+                                <img src="{% static 'img/download.jpg' %}" alt="Default Profile Image" style="width: 30px; height: 30px; border-radius: 50%; float: right; margin-left: 10px;">
+                            {% endif %}
                             {{ user.username }}
                         </a>
                     </li>
