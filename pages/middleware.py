@@ -7,6 +7,6 @@ class AppMaintenanceMiddleware(object):
         self.get_response=get_response
 
     def __call__(self,request):
-        return render(request, 'maintenance.html')
+        return render(request, 'middleware/maintenance.html')
     
 

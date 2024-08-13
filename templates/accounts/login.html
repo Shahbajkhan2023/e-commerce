@@ -1,5 +1,6 @@
-
 {% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
 
 {% block title %}Login{% endblock %}
 
@@ -7,8 +8,8 @@
     <h2>Login</h2>
     <form method="post" id="login-form" action="{% url 'login' %}">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Login</button>
     </form>
     <div id="login-errors" style="color: red;"></div>
 {% endblock %}
@@ -31,21 +32,17 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     // Handle success
-                    console.log('Login successful:', response.message);
                     window.location.href = '/';  // Redirect to home or another page
                 } else {
                     // Handle errors
-                    console.log('Error:', response.errors);
                     $('#login-errors').html('Invalid credentials. Please try again.');  // Show error message
                 }
             },
             error: function(xhr, errmsg, err) {
-                console.log('AJAX request failed:', errmsg);
                 $('#login-errors').html('An error occurred. Please try again.');  // Handle errors
             }
         });
     });
 });
 </script>
-
 {% endblock %}
